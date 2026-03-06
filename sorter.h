@@ -32,6 +32,55 @@
 template <class T>
 void sorter(std::vector<T> &items, std::size_t k) {  
 	using namespace std;
-	// write your solution for k-way merge sort below	
+	
+	if(items.size()<=1){
+		return;
+	}
+
+
+	size_t mod = items.size()%k;
+	size_t siz = items.size()/k;
+
+	size_t start=0;
+
+	vector<vector<T>> matrix;
+
+	for(size_t i=0;i<k ;i++){
+		size_t current_size = siz +(i<mod ? 1:0);
+		vector<T> subvec;
+		for (size_t j=0;j<current_size;j++){
+			subvec.push_back(items[start+j]);
+		}
+
+		sorter(subvec,k);
+		matrix.push_back(subvec);
+		start+= current_size;
+	}
+	vector<size_t> indices(k,0);
+
+	items.clear();
+
+	while(true){
+		size_t min_index = k;
+		T min_value;
+		
+		for(size_t i=0;i<k;i++){
+			if(indices[i]<matrix[i].size()){
+				if (min_index ==k || matrix[i][indices[i]]<min_value){
+					min_index = i;
+					min_value = matrix[i][indices[i]];
+				}
+			}
+		}
+
+		if (min_index == k){
+			break;
+		}
+
+		items.push_back(min_value);
+		indices[min_index]++;
+
+	}
+	
 }
 #endif
